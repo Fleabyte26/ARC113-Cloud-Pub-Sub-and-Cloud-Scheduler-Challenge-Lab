@@ -62,3 +62,89 @@ sleep 5
 gcloud pubsub subscriptions pull cloud-pubsub-subscription --limit 5
 
 Checkpoint: Click Check my progress on Task 3: Verify the results in Cloud Pub/Sub. 
+
+
+additional Notes:
+
+🅰️ Variant A: Snapshot Workflow (Form 1)
+Use this section if your lab lists:
+
+Task 1: Publish a message to the topic
+
+Task 2: View the message
+
+Task 3: Create a Pub/Sub Snapshot for Pub/Sub topic
+
+Bash
+# ------------------------------------------------------------------------------
+# Task 1: Create subscription & publish message to pre-created topic
+# ------------------------------------------------------------------------------
+# Note: Check if your task specifies 'pubsub-subscription-message'
+gcloud pubsub subscriptions create pubsub-subscription-message \
+    --topic=gcloud-pubsub-topic
+
+gcloud pubsub topics publish gcloud-pubsub-topic \
+    --message="Hello World"
+
+# Checkpoint: Verify Task 1
+
+# ------------------------------------------------------------------------------
+# Task 2: View the message
+# ------------------------------------------------------------------------------
+gcloud pubsub subscriptions pull pubsub-subscription-message --limit 5
+
+# Checkpoint: Verify Task 2
+
+# ------------------------------------------------------------------------------
+# Task 3: Create Pub/Sub Snapshot
+# ------------------------------------------------------------------------------
+gcloud pubsub snapshots create pubsub-snapshot \
+    --subscription=gcloud-pubsub-subscription
+
+# Checkpoint: Verify Task 3
+🅱️ Variant B: Cloud Scheduler Workflow (Form 3)
+Use this section if your lab lists:
+
+Task 1: Set up Cloud Pub/Sub
+
+Task 2: Create a Cloud Scheduler job
+
+Task 3: Verify the results in Cloud Pub/Sub
+
+Bash
+# Set your Region from the left panel (e.g. us-central1, us-east4)
+export REGION=""
+
+# ------------------------------------------------------------------------------
+# Task 1: Create topic and subscription
+# ------------------------------------------------------------------------------
+gcloud pubsub topics create cloud-pubsub-topic
+gcloud pubsub subscriptions create cloud-pubsub-subscription \
+    --topic=cloud-pubsub-topic
+
+# Checkpoint: Verify Task 1
+
+# ------------------------------------------------------------------------------
+# Task 2: Create Cloud Scheduler Job
+# ------------------------------------------------------------------------------
+gcloud scheduler jobs create pubsub cron-scheduler-job \
+    --location=$REGION \
+    --schedule="* * * * *" \
+    --topic=cloud-pubsub-topic \
+    --message-body="Hello World!"
+
+# Checkpoint: Verify Task 2
+
+# ------------------------------------------------------------------------------
+# Task 3: Run job & pull message
+# ------------------------------------------------------------------------------
+gcloud scheduler jobs run cron-scheduler-job --location=$REGION
+sleep 5
+gcloud pubsub subscriptions pull cloud-pubsub-subscription --limit 5
+
+# Checkpoint: Verify Task 3
+
+For a visual demonstration of the snapshot workflow steps, check out [Get Started with Pub/Sub Challenge Lab Video](https://www.youtube.com/watch?v=j7xz9e5mn8I).
+
+This video walks through the exact commands and console verification for Form 1 of the ARC113 challenge lab.
+http://googleusercontent.com/youtube_content/1
